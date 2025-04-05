@@ -13,35 +13,6 @@ void obtainData(int& a, int& b) {
     } while (a > 32767 || a < -32768 || b > 32767 || b < -32768);
 }
 
-int nLength(int multiplicand, int multiplier, int& nBits) {
-    int nMultiplicand = 16, nMultiplier = 16;
-    if (multiplicand >= -8 && multiplicand <= 7) {
-        nMultiplicand = 4;
-    }
-    else if (multiplicand >= -128 && multiplicand <= 127) {
-        nMultiplicand = 8;
-    }
-    else if (multiplicand >= -32768 && multiplicand <= 32767) {
-        nMultiplicand = 16;
-    }
-    if (multiplier >= -8 && multiplier <= 7) {
-        nMultiplier = 4;
-    }
-    else if (multiplier >= -128 && multiplier <= 127) {
-        nMultiplier = 8;
-    }
-    else if (multiplier >= -32768 && multiplier <= 32767) {
-        nMultiplier = 16;
-    }
-    if (nMultiplier > nMultiplicand) {
-        nBits = nMultiplier;
-    }
-    else {
-        nBits = nMultiplicand;
-    }
-    return nBits;
-}
-
 std::vector<bool> twoComplement(std::vector<bool> binaryNumber) {
     for (int i = 0; i < binaryNumber.size(); i++) {
         if (binaryNumber[i] == 1) {
@@ -92,17 +63,6 @@ std::vector<bool> binaryNumber(int number, int nBits) {
     return binaryNumber;
 }
 
-void printBinary(std::vector<bool>& binaryNumber) {
-    for (int i = 0; i < binaryNumber.size(); i++) {
-        if (binaryNumber[i] == 1) {
-            std::cout << '1';
-        }
-        else {
-            std::cout << '0';
-        }
-    }
-}
-
 std::vector<bool> binarySum(std::vector<bool> A, std::vector<bool> M) {
     std::vector<bool> tempA = A;
     bool C = 0;
@@ -151,23 +111,23 @@ void binaryMerge(std::vector<bool> A, std::vector<bool> Q, std::vector<bool>& re
     }
 }
 
-int binaryToInt(const std::vector<bool>& binary) {
+int binaryToInt(const std::vector<bool>& resultBinary) {
     int result = 0;
-    int n = binary.size();
-    if (binary[0]) {
+    if (resultBinary[0] == 1) {
         result = -1;
-        for (int i = 1; i < n; ++i) {
+        for (int i = 1; i < resultBinary.size(); ++i) {
             result *= 2;
-            if (binary[i]) {
+            if (resultBinary[i]) {
                 result += 1;
             }
         }
         result -= 1;
+        result += 1;
     }
     else {
-        for (int i = 1; i < n; ++i) {
+        for (int i = 1; i < resultBinary.size(); ++i) {
             result *= 2;
-            if (binary[i]) {
+            if (resultBinary[i]) {
                 result += 1;
             }
         }
@@ -176,12 +136,23 @@ int binaryToInt(const std::vector<bool>& binary) {
     return result;
 }
 
+void printBinary(std::vector<bool>& binaryNumber) {
+    int number = binaryToInt(binaryNumber);
+    for (int i = 0; i < binaryNumber.size(); i++) {
+        if (binaryNumber[i] == 1) {
+            std::cout << '1';
+        }
+        else {
+            std::cout << '0';
+        }
+    }
+}
+
 int main() {
-    int multiplicand = 0, multiplier = 0, A = 0, nBits, R = 0, resultInt;
+    int multiplicand = 0, multiplier = 0, A = 0, nBits = 16, R = 0, resultInt, bitsToPrint;
     bool Q1 = 0;
     std::cout << "-------------------------------------------------------------" << std::endl;
     obtainData(multiplicand, multiplier);
-    nLength(multiplicand, multiplier, nBits);
     std::vector<bool> binaryMultiplicand = binaryNumber(multiplicand, nBits);
     std::vector<bool> binaryMultiplier = binaryNumber(multiplier, nBits);
     std::vector<bool> binaryA = binaryNumber(A, nBits);
